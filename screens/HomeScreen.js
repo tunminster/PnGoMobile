@@ -101,6 +101,24 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+  _getStoreList(){
+
+    handlePress = async () =>{
+      fetch ('http://localhost:4099/api/values', {
+        method: 'GET',
+        headers:{
+          'Content-Type':  'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(data => {console.log(data)})
+      .catch(error => console.error(error))
+    }
+
+    
+
+  }
+
   _handleLearnMorePress = () => {
     WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
   };
