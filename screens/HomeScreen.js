@@ -12,6 +12,7 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+import {StoreListComponent } from '../components/StoreList/StoreListComponent';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -44,6 +45,10 @@ export default class HomeScreen extends React.Component {
               placeholder="Search store"
               onChangeText={(text) => this.setState({text})}
             /> 
+          </View>
+
+          <View style={styles.storeListContainer}>
+            <StoreListComponent  data="store 3"/>
           </View>
 
           <View style={styles.getStartedContainer}>
@@ -115,7 +120,12 @@ export default class HomeScreen extends React.Component {
       .catch(error => console.error(error))
     }
 
-    
+    return (
+      <ListView
+        dataSource={this.state.dataSource}
+        renderRow={(rowData) => <Text>{rowData}</Text>}
+      />
+      );
 
   }
 
@@ -239,4 +249,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingLeft: 5,
   },
+
+  storeListContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginLeft: 12,
+    marginRight: 10,
+    marginTop: 10
+  }, 
 });
