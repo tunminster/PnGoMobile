@@ -1,29 +1,51 @@
 import React from 'react';
-import BarcodeScanner from 'react-native-barcodescanner';
+//import BarcodeScanner from 'react-native-barcodescanner';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import { Constants, Permissions, BarCodeScanner } from 'expo';
 
 export default class ScanScreen extends React.Component{
-    constructor(props){
-        super (props);
+    state = {
+        hasCameraPermission: null,
+        scanned: false,
+    };
 
-        this.state = {
-            torchMode: 'off',
-            cameraType: 'back',
-        };
-    }
+    async componentDidMount() {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        this.setState({ hasCameraPermission: status === 'granted' });
+      }
 
-    barcodeReceived(e){
-        console.log('Barcode: ' + e.data);
-        console.log('Type: ' + e.type);
-    }
-
-    render(){
+      render() {
+        const { hasCameraPermission, scanned } = this.state;
+    
+        if (hasCameraPermission === null) {
+          return <Text>Requesting for camera permission</Text>;
+        }
+        if (hasCameraPermission === false) {
+          return <Text>No access to camera</Text>;
+        }
         return (
-            <BarcodeScanner
-        onBarCodeRead={this.barcodeReceived}
-        style={{ flex: 1 }}
-        torchMode={this.state.torchMode}
-        cameraType={this.state.cameraType}
-      />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}>
+            <BarCodeScanner
+              onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
+              style={StyleSheet.absoluteFillObject}
+            />
+    
+            {scanned && (
+              <Button
+                title={'Tap to Scan Again'}
+                onPress={() => this.setState({ scanned: false })}
+              />
+            )}
+          </View>
         );
-    }
+      }
+
+      handleBarCodeScanned = ({ type, data }) => {
+        this.setState({ scanned: true });
+        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+      };
 }
