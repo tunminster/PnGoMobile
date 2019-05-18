@@ -47,5 +47,9 @@ export default class ScanScreen extends React.Component{
       handleBarCodeScanned = ({ type, data }) => {
         this.setState({ scanned: true });
         alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+        // redirect to SettingsScreen
+        this.props.navigation.navigate('Home');
+
       };
 }
